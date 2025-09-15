@@ -1,26 +1,33 @@
-"use client";
-import type { Snippet } from "@prisma/client";
-import { Editor } from "@monaco-editor/react";
-import { useState } from "react";
+'use client';
+import type { Snippet } from '@prisma/client';
+import { Editor } from '@monaco-editor/react';
+import { useState } from 'react';
+import * as actions from '@/actions';
 
 interface SnippetEditFormProps {
-  snippet: Snippet;
+	snippet: Snippet;
 }
 
 export default function SnippetEditForm(props: SnippetEditFormProps) {
-  const [code, setCode] = useState(props.snippet.code);
-  const onChange = (value: string = '') => {
-    setCode(value);
-  };
-  return (
-    <div>
-      <Editor
-        height={"25vh"}
-        defaultLanguage="javascript"
-        defaultValue={code}
-        onChange={onChange}
-        options={{minimap: {enabled: false}}}
-      />
-    </div>
-  );
+	const [code, setCode] = useState(props.snippet.code);
+	const onChange = (value: string = '') => {
+		setCode(value);
+	};
+
+	const clientAction = actions.editSnippet.bind(null, props.snippet.id, code);
+
+	return (
+		<div>
+			<Editor
+				height={'25vh'}
+				defaultLanguage='javascript'
+				defaultValue={code}
+				onChange={onChange}
+				options={{ minimap: { enabled: false } }}
+			/>
+			<form action={clientAction}>
+				<button type='submit'>Save</button>
+			</form>
+		</div>
+	);
 }
